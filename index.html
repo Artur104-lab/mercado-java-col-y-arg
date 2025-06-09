@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía IA: Mercado de Talento Java Cloud - Argentina vs. Colombia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .brand-blue { color: #00A6ED; }
+        .brand-purple { color: #7542C1; }
+        .brand-pink { color: #F33A6A; }
+        .brand-yellow { color: #FFC300; }
+        .bg-brand-blue { background-color: #00A6ED; }
+        .bg-brand-purple { background-color: #7542C1; }
+        .bg-brand-pink { background-color: #F33A6A; }
+        .bg-brand-yellow { background-color: #FFC300; }
+        .gradient-text {
+            background: linear-gradient(90deg, #00A6ED, #7542C1, #F33A6A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .stat-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(200, 200, 200, 0.3);
+        }
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+            height: 100%;
+        }
+        .swot-item {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .gemini-output {
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 150px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+        .gemini-button {
+            transition: all 0.3s ease;
+        }
+        .gemini-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-black gradient-text tracking-tight">La Batalla por el Talento Java Cloud</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Un análisis comparativo del mercado de desarrolladores en Argentina y Colombia, potenciado con IA.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+        
+        <section id="market-snapshot" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">El Terreno de Juego: Panorama del Mercado</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">Ambos países enfrentan una demanda feroz, pero la distribución y la escasez del talento presentan dinámicas muy diferentes. Mientras Argentina concentra su talento en un gran hub, Colombia lo distribuye en varios polos emergentes.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Argentina <span class="text-xl">🇦🇷</span></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-grow">
+                        <div class="stat-card rounded-lg p-4 text-center flex flex-col justify-center">
+                            <p class="text-5xl font-extrabold brand-pink">76%</p>
+                            <p class="mt-2 text-gray-600">de empleadores tiene dificultades para cubrir vacantes de TI.</p>
+                        </div>
+                        <div class="stat-card rounded-lg p-4 flex flex-col">
+                            <h4 class="font-semibold text-center mb-2">Concentración del Talento</h4>
+                             <div class="chart-container flex-grow">
+                                <canvas id="argentinaTalentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-sm text-gray-500">El mercado argentino, más maduro, se define por una alta competencia y la necesidad de salarios dolarizados para mitigar la volatilidad económica.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Colombia <span class="text-xl">🇨🇴</span></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-grow">
+                         <div class="stat-card rounded-lg p-4 text-center flex flex-col justify-center">
+                            <p class="text-5xl font-extrabold brand-purple">112k</p>
+                            <p class="mt-2 text-gray-600">es el déficit proyectado de desarrolladores para 2025.</p>
+                        </div>
+                         <div class="stat-card rounded-lg p-4 flex flex-col">
+                            <h4 class="font-semibold text-center mb-2">Principales Polos de Talento</h4>
+                            <div class="chart-container flex-grow">
+                                <canvas id="colombiaTalentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-sm text-gray-500">Colombia presenta un mercado en plena expansión, con un gran volumen de nuevo talento pero con una brecha de perfiles con experiencia senior en cloud.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="salary" class="mb-16 bg-white rounded-lg shadow-lg p-6 md:p-8">
+            <h2 class="text-3xl font-bold text-center mb-2">El Enfrentamiento Salarial (USD)</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">La compensación en dólares es un factor clave. En Argentina es casi un requisito por la inflación, mientras que en Colombia es impulsada por la competencia global. Los roles senior especializados en Cloud pueden alcanzar remuneraciones significativamente más altas.</p>
+             <div class="chart-container h-96 md:h-[500px]">
+                <canvas id="salaryChart"></canvas>
+            </div>
+        </section>
+
+        <section id="tech-stack" class="mb-16">
+             <h2 class="text-3xl font-bold text-center mb-2">El Arsenal Tecnológico Requerido</h2>
+             <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">El stack tecnológico es globalmente estándar, pero la demanda de herramientas específicas de DevOps y bases de datos puede variar, reflejando la madurez de su adopción en cada mercado.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="font-bold text-xl mb-4 text-center border-b pb-2">Core & Frameworks</h3>
+                    <div class="flex flex-wrap gap-3 justify-center">
+                        <span class="bg-brand-blue text-white py-2 px-4 rounded-full font-semibold">Java 11+</span>
+                        <span class="bg-brand-blue text-white py-2 px-4 rounded-full font-semibold">Spring Boot</span>
+                        <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">Microservicios</span>
+                        <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">APIs RESTful</span>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="font-bold text-xl mb-4 text-center border-b pb-2">Cloud & Contenedores</h3>
+                     <div class="flex flex-wrap gap-3 justify-center">
+                        <span class="bg-brand-purple text-white py-2 px-4 rounded-full font-semibold">AWS</span>
+                        <span class="bg-brand-purple text-white py-2 px-4 rounded-full font-semibold">Azure</span>
+                        <span class="bg-brand-purple text-white py-2 px-4 rounded-full font-semibold">GCP</span>
+                        <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">Docker</span>
+                         <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">Kubernetes</span>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="font-bold text-xl mb-4 text-center border-b pb-2">DevOps & Datos</h3>
+                     <div class="flex flex-wrap gap-3 justify-center">
+                        <span class="bg-brand-pink text-white py-2 px-4 rounded-full font-semibold">CI/CD</span>
+                        <span class="bg-brand-pink text-white py-2 px-4 rounded-full font-semibold">Git</span>
+                        <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">Terraform</span>
+                        <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">PostgreSQL</span>
+                        <span class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full">MongoDB</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="retention" class="mb-16 bg-white rounded-lg shadow-lg p-6 md:p-8">
+            <h2 class="text-3xl font-bold text-center mb-2">El Juego de la Retención</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">Más allá del dinero, la flexibilidad y el crecimiento profesional son los imanes más potentes para mantener al talento. En Argentina, la estabilidad es un plus, mientras que en Colombia el "propósito" del proyecto gana peso.</p>
+            <div class="chart-container h-80 md:h-96">
+                <canvas id="retentionChart"></canvas>
+            </div>
+        </section>
+
+        <section id="swot" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Análisis Estratégico FODA</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">Cada mercado presenta un conjunto único de fortalezas, oportunidades, debilidades y amenazas que deben ser consideradas para una estrategia de contratación exitosa.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Argentina 🇦🇷</h3>
+                    <div class="swot-grid">
+                        <div class="swot-item bg-green-100 border border-green-300">
+                            <h4 class="font-bold text-green-800">Fortalezas</h4>
+                            <ul class="list-disc list-inside text-sm text-green-700 mt-2">
+                                <li>Industria de TI madura</li>
+                                <li>Alta calidad del talento</li>
+                                <li>Concentración en AMBA</li>
+                            </ul>
+                        </div>
+                        <div class="swot-item bg-red-100 border border-red-300">
+                            <h4 class="font-bold text-red-800">Debilidades</h4>
+                            <ul class="list-disc list-inside text-sm text-red-700 mt-2">
+                                <li>Escasez extrema de perfiles</li>
+                                <li>Altas expectativas salariales (USD)</li>
+                                <li>Volatilidad económica</li>
+                            </ul>
+                        </div>
+                        <div class="swot-item bg-blue-100 border border-blue-300">
+                            <h4 class="font-bold text-blue-800">Oportunidades</h4>
+                            <ul class="list-disc list-inside text-sm text-blue-700 mt-2">
+                                <li>Atraer con estabilidad</li>
+                                <li>Acceso a talento remoto</li>
+                                <li>Potencial de nearshoring</li>
+                            </ul>
+                        </div>
+                        <div class="swot-item bg-yellow-100 border border-yellow-300">
+                             <h4 class="font-bold text-yellow-800">Amenazas</h4>
+                             <ul class="list-disc list-inside text-sm text-yellow-700 mt-2">
+                                <li>Competencia remota global</li>
+                                <li>Fuga de cerebros a roles globales</li>
+                                <li>Inestabilidad económica persistente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Colombia 🇨🇴</h3>
+                     <div class="swot-grid">
+                        <div class="swot-item bg-green-100 border border-green-300">
+                            <h4 class="font-bold text-green-800">Fortalezas</h4>
+                            <ul class="list-disc list-inside text-sm text-green-700 mt-2">
+                                <li>Pool de talento en rápido crecimiento</li>
+                                <li>Fuerte apoyo institucional</li>
+                                <li>Ecosistemas de innovación</li>
+                            </ul>
+                        </div>
+                        <div class="swot-item bg-red-100 border border-red-300">
+                            <h4 class="font-bold text-red-800">Debilidades</h4>
+                            <ul class="list-disc list-inside text-sm text-red-700 mt-2">
+                                <li>Déficit de talento con experiencia</li>
+                                <li>Brecha de habilidades cloud</li>
+                                <li>Competencia por perfiles senior</li>
+                            </ul>
+                        </div>
+                        <div class="swot-item bg-blue-100 border border-blue-300">
+                            <h4 class="font-bold text-blue-800">Oportunidades</h4>
+                            <ul class="list-disc list-inside text-sm text-blue-700 mt-2">
+                                <li>Invertir en upskilling y formación</li>
+                                <li>Consolidarse como hub de nearshoring</li>
+                                <li>Atraer con cultura y propósito</li>
+                            </ul>
+                        </div>
+                        <div class="swot-item bg-yellow-100 border border-yellow-300">
+                             <h4 class="font-bold text-yellow-800">Amenazas</h4>
+                             <ul class="list-disc list-inside text-sm text-yellow-700 mt-2">
+                                <li>Demanda supera la oferta especializada</li>
+                                <li>Atracción de talento por empresas globales</li>
+                                <li>Riesgo de "renuncia silenciosa"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gemini-tools" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Herramientas de Reclutamiento IA ✨</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">Utiliza la IA para transformar los datos en acciones. Genera estrategias de reclutamiento y descripciones de puestos personalizadas para cada mercado.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="font-bold text-xl mb-4">Generador de Estrategias</h3>
+                    <p class="text-sm text-gray-600 mb-4">Selecciona un país para generar una estrategia de reclutamiento basada en su FODA y factores de retención.</p>
+                    <div class="flex items-center gap-4">
+                        <select id="strategy-country" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="Argentina">Argentina</option>
+                            <option value="Colombia">Colombia</option>
+                        </select>
+                        <button id="generate-strategy-btn" class="gemini-button bg-brand-blue text-white font-bold py-2 px-4 rounded-md w-full">Generar Estrategia ✨</button>
+                    </div>
+                    <div id="strategy-output" class="gemini-output">Selecciona un país y haz clic en "Generar Estrategia" para ver la magia.</div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="font-bold text-xl mb-4">Creador de Descripciones de Puesto</h3>
+                    <p class="text-sm text-gray-600 mb-4">Crea una descripción de puesto atractiva para el perfil y país que necesites.</p>
+                    <div class="flex items-center gap-4">
+                        <select id="jd-country" class="block w-full rounded-md border-gray-300 shadow-sm">
+                            <option value="Argentina">Argentina</option>
+                            <option value="Colombia">Colombia</option>
+                        </select>
+                         <select id="jd-seniority" class="block w-full rounded-md border-gray-300 shadow-sm">
+                            <option value="Semi-Senior">Semi-Senior</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Junior">Junior</option>
+                        </select>
+                        <button id="generate-jd-btn" class="gemini-button bg-brand-purple text-white font-bold py-2 px-4 rounded-md w-full">Crear Descripción ✨</button>
+                    </div>
+                     <div id="jd-output" class="gemini-output">Completa los campos y haz clic en "Crear Descripción".</div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm">
+            <p>Esta infografía se basa en el "Análisis Comparativo del Mercado de Desarrolladores Backend Java con Experiencia Cloud (AWS, Azure, GCP) en Argentina y Colombia".</p>
+            <p class="mt-2 opacity-70">Generado con fines ilustrativos y de visualización de datos. Prohibido el uso de SVG y Mermaid JS.</p>
+        </div>
+    </footer>
+
+    <script>
+        const brandColors = {
+            blue: '#00A6ED',
+            purple: '#7542C1',
+            pink: '#F33A6A',
+            yellow: '#FFC300',
+            gray: '#6b7280'
+        };
+
+        const transparentColors = {
+            blue: 'rgba(0, 166, 237, 0.7)',
+            purple: 'rgba(117, 66, 193, 0.7)',
+        }
+
+        function wrapLabel(str, maxWidth) {
+            if (str.length <= maxWidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > maxWidth) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            });
+            lines.push(currentLine.trim());
+            return lines;
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+              return label.join(' ');
+            } else {
+              return label;
+            }
+        };
+        
+        const defaultChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: brandColors.gray,
+                        font: {
+                           size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: brandColors.gray },
+                    grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                },
+                x: {
+                    ticks: { color: brandColors.gray },
+                    grid: { display: false }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('argentinaTalentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['AMBA', 'Otras Regiones'],
+                datasets: [{
+                    label: 'Concentración de Talento',
+                    data: [92, 8],
+                    backgroundColor: [brandColors.blue, brandColors.gray],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: { ...defaultChartOptions, scales: {} }
+        });
+
+        new Chart(document.getElementById('colombiaTalentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Bogotá', 'Medellín', 'Otros Hubs'],
+                datasets: [{
+                    label: 'Polos de Talento',
+                    data: [50, 30, 20],
+                    backgroundColor: [brandColors.purple, brandColors.pink, brandColors.gray],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: { ...defaultChartOptions, scales: {} }
+        });
+
+        new Chart(document.getElementById('salaryChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Junior', 'Semi-Senior', 'Senior'],
+                datasets: [
+                    {
+                        label: 'Argentina (USD/mes)',
+                        data: [1520, 1900, 3500],
+                        backgroundColor: transparentColors.blue,
+                        borderColor: brandColors.blue,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Colombia (USD/mes)',
+                        data: [1200, 3850, 5800],
+                        backgroundColor: transparentColors.purple,
+                        borderColor: brandColors.purple,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: { ...defaultChartOptions, scales: {
+                 y: {
+                    beginAtZero: true,
+                    ticks: { 
+                        color: brandColors.gray,
+                        callback: function(value) { return '$' + value; }
+                    },
+                    grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                },
+                x: {
+                    ticks: { color: brandColors.gray },
+                    grid: { display: false }
+                }
+            }}
+        });
+        
+        new Chart(document.getElementById('retentionChart'), {
+            type: 'bar',
+            data: {
+                labels: [wrapLabel('Flexibilidad Laboral (Remoto/Híbrido)', 16), wrapLabel('Desarrollo Profesional y Capacitación', 16), wrapLabel('Cultura, Ambiente y Propósito', 16)],
+                datasets: [{
+                    label: 'Importancia Percibida',
+                    data: [95, 85, 75],
+                    backgroundColor: [brandColors.blue, brandColors.purple, brandColors.pink],
+                    borderColor: '#ffffff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...defaultChartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                       beginAtZero: true,
+                       max: 100,
+                       ticks: { 
+                           color: brandColors.gray,
+                           callback: function(value) { return value + '%'; }
+                        },
+                       grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                    },
+                    y: {
+                        ticks: { color: brandColors.gray, font: {size: 10} },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                       callbacks: {
+                            title: tooltipTitleCallback
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gemini API Integration
+        const marketData = {
+            argentina: {
+                swot: "Fortalezas: Industria de TI madura, Alta calidad del talento. Debilidades: Escasez extrema de perfiles, Altas expectativas salariales en USD, Volatilidad económica. Oportunidades: Atraer con estabilidad, Acceso a talento remoto. Amenazas: Competencia remota global, Fuga de cerebros.",
+                salaries: "Junior: $1520/mes, Semi-Senior: $1900/mes, Senior: $3500/mes.",
+            },
+            colombia: {
+                swot: "Fortalezas: Pool de talento en rápido crecimiento, Fuerte apoyo institucional. Debilidades: Déficit de talento con experiencia, Brecha de habilidades cloud. Oportunidades: Invertir en upskilling, Consolidarse como hub de nearshoring. Amenazas: Demanda supera la oferta especializada, Atracción por empresas globales.",
+                salaries: "Junior: $1200/mes, Semi-Senior: $3850/mes, Senior: $5800/mes.",
+            },
+            common: {
+                techStack: "Java 11+, Spring Boot, Microservicios, APIs RESTful, AWS, Azure, GCP, Docker, Kubernetes, CI/CD, Git, Terraform, PostgreSQL, MongoDB.",
+                retentionFactors: "Flexibilidad Laboral (Remoto/Híbrido), Desarrollo Profesional y Capacitación, Cultura, Ambiente y Propósito."
+            }
+        };
+
+        const generateStrategyBtn = document.getElementById('generate-strategy-btn');
+        const strategyOutput = document.getElementById('strategy-output');
+        const strategyCountrySelect = document.getElementById('strategy-country');
+
+        generateStrategyBtn.addEventListener('click', async () => {
+            const country = strategyCountrySelect.value;
+            const data = marketData[country.toLowerCase()];
+            strategyOutput.textContent = 'Generando estrategia con IA... 🧠';
+
+            const prompt = `Actuando como un analista de reclutamiento senior para LATAM, genera una estrategia de contratación concisa y accionable en 3-4 puntos clave para encontrar desarrolladores "Java con experiencia en Cloud" en ${country}. Basa tu estrategia en los siguientes datos:\n\n- Análisis FODA: ${data.swot}\n- Salarios promedio (USD): ${data.salaries}\n- Factores Clave de Retención: ${marketData.common.retentionFactors}\n\nLa estrategia debe ser práctica y directa. Responde en español y en formato de lista.`;
+
+            try {
+                const text = await callGemini(prompt);
+                strategyOutput.textContent = text;
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                strategyOutput.textContent = 'Hubo un error al generar la estrategia. Por favor, intenta de nuevo.';
+            }
+        });
+
+        const generateJDBtn = document.getElementById('generate-jd-btn');
+        const jdOutput = document.getElementById('jd-output');
+        const jdCountrySelect = document.getElementById('jd-country');
+        const jdSenioritySelect = document.getElementById('jd-seniority');
+
+        generateJDBtn.addEventListener('click', async () => {
+            const country = jdCountrySelect.value;
+            const seniority = jdSenioritySelect.value;
+            jdOutput.textContent = 'Creando descripción con IA... 📝';
+
+            const prompt = `Actuando como un Hiring Manager, crea una descripción de puesto atractiva para un Desarrollador Backend Java ${seniority} en ${country}. Utiliza el siguiente stack tecnológico requerido: ${marketData.common.techStack}. En la sección de beneficios, enfatiza los siguientes factores que son muy valorados por los candidatos: ${marketData.common.retentionFactors}. El tono debe ser profesional pero enérgico y atractivo. Estructura la salida con encabezados claros (Responsabilidades, Requisitos, Beneficios). Responde en español.`;
+
+            try {
+                const text = await callGemini(prompt);
+                jdOutput.textContent = text;
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                jdOutput.textContent = 'Hubo un error al crear la descripción. Por favor, intenta de nuevo.';
+            }
+        });
+
+        async function callGemini(prompt) {
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API call failed with status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                return result.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error('Respuesta inesperada de la API o contenido vacío.');
+            }
+        }
+    </script>
+</body>
+</html>
